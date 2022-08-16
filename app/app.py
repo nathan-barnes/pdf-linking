@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, flash, redirect, url_for, send_from_directory
 import ghhops_server as hs
 
 #Description
@@ -12,7 +12,9 @@ import ghhops_server as hs
 
 import fitz #need to install
 from spellchecker import SpellChecker #need to install
-from os import path
+from os import path, getcwd
+import os
+
 # import json
 
 # import csv
@@ -23,18 +25,41 @@ import sys
 sys.path.append("C:\Python38\Lib\site-packages")
 
 
-def pdfLinker(pdfLinkFolder, pdfName, SearchText, excludeListInput ):
+#-------------------------------------------------------------------------------------------register hops app as middleware
+app = Flask(__name__)
+# hops = hs.Hops(app)
+hops: hs.HopsFlask = hs.Hops(app)
+#-------------------------------------------------------------------------------------------Global vars
+#attempt to fix file upload: https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def upload_file(filLocation, filename):
+
+    file = request.files[filLocation]
+ 
+    # filename = secure_filename(file.filename) # revise this because this is important for security
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    # return redirect(url_for('download_file', name=filename))
+    return redirect(url_for('download_file', name=filename))
+
+def download_file(name):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+
+def pdfLinker(app, pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     # pdfLinkFolder = sys.argv[1]
     # pdfName = sys.argv[2]
     print (pdfLinkFolder,pdfName)
     pdfLink = pdfLinkFolder + pdfName + '.pdf'
-
+    procName = pdfName + '.pdf'
     # ------- using fitz to read the text and search through to find items
     # ------- PDFwriter to writ stuff
 
-
+    upload_file(pdfLink, pdfName)
+    urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
     ### READ IN PDF
-    doc = fitz.open(pdfLink)
+    doc = fitz.open(urlpdfLink)
 
 
 
@@ -214,6 +239,7 @@ def pdfLinker(pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     
     # doc.ez_save(pdfLinkFolder + pdfName + '_Belted.pdf')
     doc.ez_save(pdfLink[:-4] + '_Belted.pdf')
+    download_file(pdfLink[:-4] + '_Belted.pdf')
 
     # --- spell check---------------------------------------------------------------
 
@@ -357,10 +383,7 @@ def pdfLinker(pdfLinkFolder, pdfName, SearchText, excludeListInput ):
 
 # sleep(10)
 
-#-------------------------------------------------------------------------------------------register hops app as middleware
-app = Flask(__name__)
-# hops = hs.Hops(app)
-hops: hs.HopsFlask = hs.Hops(app)
+
 
 
 @app.route("/help")
@@ -388,7 +411,7 @@ def BELTED(run,  pdfFolder, pdfNamer, details, ignorDetails):
     print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
     if(run):
         # print (details, details, pdfFolder, pdfNamer, ignorDetails),
-        msg = pdfLinker(  pdfFolder, pdfNamer, details, ignorDetails),
+        msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
         
         # return ['ran', details, details, pdfFolder, pdfNamer]
         return msg
