@@ -365,7 +365,7 @@ hops = hs.Hops(app)
     "/BELTED",
     name="BELTED",
     description="cook, conversationalist, adds links to pdf",
-    icon="pointat.png",
+    icon="belt.png",
     inputs=[
         hs.HopsBoolean("run", "R", "run the component"),
         hs.HopsString("pdfFolder", "pdf", "pdf location "),
