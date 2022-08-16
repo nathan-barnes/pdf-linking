@@ -9,10 +9,10 @@ app = Flask(__name__)
 hops = hs.Hops(app)
 
 @hops.component(
-    "/pointat",
+    "/pointats",
     name="PointAt",
     description="Get point along curve",
-    icon="/belt.png",
+    icon="belt.png",
     inputs=[
         hs.HopsCurve("Curve", "C", "Curve to evaluate"),
         hs.HopsNumber("t", "t", "Parameter on Curve to evaluate"),
@@ -21,7 +21,7 @@ hops = hs.Hops(app)
         hs.HopsPoint("P", "P", "Point on curve at t")
     ]
 )
-def pointat(curve, t):
+def pointats(curve, t):
     return curve.PointAt(t)
 
 
