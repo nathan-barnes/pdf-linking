@@ -6,13 +6,19 @@ import rhino3dm
 
 # register hops app as middleware
 app = Flask(__name__)
-hops = hs.Hops(app)
+# hops = hs.Hops(app)
+hops: hs.HopsFlask = hs.Hops(app)
+
+
+@app.route("/help")
+def help():
+    return "Welcome to Grashopper Hops for CPython!"
 
 @hops.component(
     "/pointats",
     name="PointAt",
     description="Get point along curve",
-    icon="belt.png",
+    icon="./img/belt.png",
     inputs=[
         hs.HopsCurve("Curve", "C", "Curve to evaluate"),
         hs.HopsNumber("t", "t", "Parameter on Curve to evaluate"),
@@ -21,9 +27,10 @@ hops = hs.Hops(app)
         hs.HopsPoint("P", "P", "Point on curve at t")
     ]
 )
+
 def pointats(curve, t):
     return curve.PointAt(t)
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
