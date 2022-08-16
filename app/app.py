@@ -14,6 +14,7 @@ import fitz #need to install
 from spellchecker import SpellChecker #need to install
 from os import path, getcwd
 import os
+import requests
 
 # import json
 
@@ -29,23 +30,67 @@ sys.path.append("C:\Python38\Lib\site-packages")
 app = Flask(__name__)
 # hops = hs.Hops(app)
 hops: hs.HopsFlask = hs.Hops(app)
+
 #-------------------------------------------------------------------------------------------Global vars
 #attempt to fix file upload: https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
 UPLOAD_FOLDER = '/path/to/the/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-def upload_file(filLocation, filename):
+@app.route("/help")
+def help():
+    return "Welcome to Grashopper Hops for CPython!"
 
-    file = request.files[filLocation]
+# @app.route('/upload', methods= ['GET', 'POST'])
+# def upload_file(filLocation, filename):
+#     # file = {'files': open(filLocation, 'rb')}
+#     file = request.files['files']
+#     # file.save('/Users/djangod/newTest.txt')
+#     # file = request.files[filLocation]
  
-    # filename = secure_filename(file.filename) # revise this because this is important for security
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    # return redirect(url_for('download_file', name=filename))
-    return redirect(url_for('download_file', name=filename))
+#     # filename = secure_filename(file.filename) # revise this because this is important for security
+#     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#     # return redirect(url_for('download_file', name=filename))
+#     return redirect(url_for('download_file', name=filename))
 
-def download_file(name):
-    return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+# def callFile(fileLocation):
+#     url = "http://127.0.0.1:5000/upload"
+#     files = {'files': open(fileLocation, 'rb')}
+#     r = requests.post(url, files=files)
+
+# def download_file(name):
+#     return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+    
+
+@hops.component(
+    "/BELTED",
+    name="BELTED",
+    description="cook, conversationalist, adds links to pdf",
+    icon="./img/belt.png",
+    inputs=[
+        hs.HopsBoolean("run", "R", "run the component"),
+        hs.HopsString("pdfFolder", "pdf", "pdf location "),
+        hs.HopsString("pdfNamer", "name", "pdfn ame to link with details"),
+        hs.HopsString("details", "D", "details list to link"),
+        hs.HopsString("ignorDetails", "iD", "details to ignore"),
+    ],
+    outputs=[
+        hs.HopsString("oFile", "of", "output file path for pdf"),
+    ]
+)
+
+def BELTED(run,  pdfFolder, pdfNamer, details, ignorDetails):
+    print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
+    if(run):
+        # print (details, details, pdfFolder, pdfNamer, ignorDetails),
+        msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
+        
+        # return ['ran', details, details, pdfFolder, pdfNamer]
+        return msg
+    else:
+        return 'waiting'
+
+
 
 def pdfLinker(app, pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     # pdfLinkFolder = sys.argv[1]
@@ -55,11 +100,12 @@ def pdfLinker(app, pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     procName = pdfName + '.pdf'
     # ------- using fitz to read the text and search through to find items
     # ------- PDFwriter to writ stuff
-
-    upload_file(pdfLink, pdfName)
-    urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
+    # callFile(pdfLink)
+    # upload_file(pdfLink, pdfName)
+    # urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
     ### READ IN PDF
-    doc = fitz.open(urlpdfLink)
+    # doc = fitz.open(urlpdfLink)
+    doc = fitz.open(pdfLink)
 
 
 
@@ -239,184 +285,14 @@ def pdfLinker(app, pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     
     # doc.ez_save(pdfLinkFolder + pdfName + '_Belted.pdf')
     doc.ez_save(pdfLink[:-4] + '_Belted.pdf')
-    download_file(pdfLink[:-4] + '_Belted.pdf')
+    # download_file(pdfLink[:-4] + '_Belted.pdf')
 
-    # --- spell check---------------------------------------------------------------
-
-    misspelledList = []
-    pageHeader = []
-
-    print("page text")
-    # print (doc.metadata)
-
-    for page in doc:
-    # page = doc[0]
-        ### SEARCH
-        print('-----------page', page)
-        # print (page.clean_contents())
-        pageHeader.append('page num {0}'.format(page.number))
-        # textToCheck = page.get_text('text')
-        textListClean =[]
-        new_string = []
-        updateMisspelled = []
-        textToIgnore = SearchText + excludeList
-        textToIgnoreList = []
-        textToIgnoreList2 = []
-        searchCharInit = ["$","@","Â","©", "ï","¿","|",  "'",'½', 'ï', '�', '©' ] 
-
-        pageText = page.get_text('text').split('\n')
-        cleanedPageText = []
-        # print(pageText)
-        # print(len(pageText))
-        for eachtext in pageText:
-        # for eachText in cleanedPageText:
-            # print(eachtext)
-            #  any("abc" in s for s in some_list):
-            if any(s in eachtext for s in searchCharInit):
-                # print( eachtext)
-                x=1
-            else:
-                cleanedPageText.append(eachtext)
-                
-
-
-        # for each in textList:
-        # for each in textListMultiClean:
-        for each in cleanedPageText:
-            # print (len(each))
-            if (len(each) > 0):
-                # print (each)
-                splitText = each.split(' ')
-                if(len(splitText)>1):
-                    for i in splitText:
-                        textListClean.append(i)
-                else:
-                    # print (len(splitText))
-                    textListClean.append(splitText[0])
-
-        # print (textListClean)
-        for textRemove in textListClean:
-        # for textRemove in textList:
-            # print(textRemove)
-
-            if (textRemove not in textToIgnore):
-                # print (textRemove, textToIgnore)
-                textToIgnoreList.append(textRemove)
-
-        # print (textToIgnoreList)
-        spell = SpellChecker(distance=1)
-        misspelled = spell.unknown(textToIgnoreList)
-        # misspelledLister = []
-        # spezzed = spell.known(textToIgnoreList)
-        # for eachword in textToIgnoreList:
-        #     if eachword not in spezzed:
-        #         misspelledLister.append(eachword)
-
-        # misspelled2 = list(misspelled)
-        # print (misspelledLister)
-
-        # something about this is clumsy
-        # for stringy in misspelled:
-        for stringy in misspelled:
-            # cleanstring = ''.join(char for char in stringy if char.isalnum()) #I don't want to remove middle of word hyphnes etc, 
-            # print('stringy',stringy)
-            searchChar = ["$","@","&","Â","©",",", "ï","¿","|", "(", ")", "'",'½', 'ï'] 
-            cleanstring = ''
-            if(len(stringy)>1):
-                if (not stringy[len(stringy)-1].isalnum()):
-                    # print (stringy, stringy[-1:], stringy[:-1])
-                    cleanstring = stringy[:-1]
-                    # cleanstring = ''.join(char for char in stringy if char.isalnum())
-                    # cleanstring = re.sub("[$@&Â©,n22Â©ak]","",stringy)
-                elif (not stringy[0].isalnum()):
-                    # print(stringy, stringy[1], stringy[1].isalnum(),  stringy[1:])
-                    cleanstring = stringy[1:]
-                
-                else:
-                    # print(stringy)
-                    cleanstring = stringy
-
-            if (r'/' in stringy):
-                # break
-                # print('slash', stringy)
-                cleanstring = ''
-            for eachChar in searchChar:
-                if (eachChar in cleanstring):
-                    cleanstring = ''
-            if(len(cleanstring)>1):
-
-                # print(cleanstring, ''.join(cleanstring.split('-')))
-                try:
-                    if (int(''.join(cleanstring.split('-')))):
-                        # break
-                        # print('is_integer', cleanstring)
-                        cleanstring = ''
-                except:
-                    # print('notstring')
-                    x=1
-            #remove exceptions 
-            if len(cleanstring) > 3:
-                # print (cleanstring)
-                # new_string.append(''.join(char for char in stringy if char.isalnum()))
-                new_string.append(cleanstring)
-                # new_string.append(stringy)
-
-        for textRemove2 in new_string:
-            if textRemove2.lower() not in textToIgnore:
-                textToIgnoreList2.append(textRemove2)
-
-        def myFunc(e):
-            return len(e)
-        misspelledcleaned = spell.unknown(textToIgnoreList2)
-        listToSort = list(misspelledcleaned)
-        listToSort.sort(key=myFunc)
-
-        misspelledList.append(listToSort)
-
-
-    # writeList = list(map(list, itertools.zip_longest(*misspelledList, fillvalue=None)))
-    # print('report.csv', pageHeader, writeList)
-    # writeCsv(pdfLink[:-4]+'_report.csv', ['detailsNotFound'], detailsNotFound, pageHeader, writeList )
+    
     return 'processed'
 
 
 
-# sleep(10)
 
-
-
-
-@app.route("/help")
-def help():
-    return "Welcome to Grashopper Hops for CPython!"
-
-@hops.component(
-    "/BELTED",
-    name="BELTED",
-    description="cook, conversationalist, adds links to pdf",
-    icon="./img/belt.png",
-    inputs=[
-        hs.HopsBoolean("run", "R", "run the component"),
-        hs.HopsString("pdfFolder", "pdf", "pdf location "),
-        hs.HopsString("pdfNamer", "name", "pdfn ame to link with details"),
-        hs.HopsString("details", "D", "details list to link"),
-        hs.HopsString("ignorDetails", "iD", "details to ignore"),
-    ],
-    outputs=[
-        hs.HopsString("oFile", "of", "output file path for pdf"),
-    ]
-)
-
-def BELTED(run,  pdfFolder, pdfNamer, details, ignorDetails):
-    print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
-    if(run):
-        # print (details, details, pdfFolder, pdfNamer, ignorDetails),
-        msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
-        
-        # return ['ran', details, details, pdfFolder, pdfNamer]
-        return msg
-    else:
-        return 'waiting'
 
 if __name__ == "__main__":
     app.run(debug=True)
