@@ -87,6 +87,7 @@ def download_file(name):
 
 def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
     print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
+    pdfFolder.replace("\\","/")
     if(run):
         # print (details, details, pdfFolder, pdfNamer, ignorDetails),
         # msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
@@ -102,7 +103,7 @@ def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     print ('pdfLinkFolder', pdfLinkFolder,pdfName)
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    # pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
+    pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
     pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
     app.config['UPLOAD_FOLDER'] = pdfLink
     file_ids = ''
