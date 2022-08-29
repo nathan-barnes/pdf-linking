@@ -90,7 +90,7 @@ def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
     if(run):
         # print (details, details, pdfFolder, pdfNamer, ignorDetails),
         # msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
-        msg = pdfLinker( pdfFolder, pdfNamer[1:], details, ignorDetails),
+        msg = pdfLinker( pdfFolder, pdfNamer, details, ignorDetails),
         
         # return ['ran', details, details, pdfFolder, pdfNamer]
         return msg
