@@ -10,6 +10,9 @@ import ghhops_server as hs
 
 # cloud function taking arguments: https://codelabs.developers.google.com/codelabs/cloud-functions-python-http#3
 
+# Pip install specific versions of multiple packages:
+#pip install -r myproject/requirements.txt
+
 import fitz #need to install
 from spellchecker import SpellChecker #need to install
 from os import path, getcwd
@@ -28,38 +31,41 @@ sys.path.append("C:\Python38\Lib\site-packages")
 
 #-------------------------------------------------------------------------------------------register hops app as middleware
 app = Flask(__name__)
-# hops = hs.Hops(app)
-hops: hs.HopsFlask = hs.Hops(app)
+hops = hs.Hops(app)
+# hops: hs.HopsFlask = hs.Hops(app)
 
 #-------------------------------------------------------------------------------------------Global vars
 #attempt to fix file upload: https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
-UPLOAD_FOLDER = '/path/to/the/uploads'
+# UPLOAD_FOLDER = '/path/to/the/uploads'
+UPLOAD_FOLDER = 'C:/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-@app.route("/help")
+@app.route("/help",  methods=['GET', 'POST'])
 def help():
     return "Welcome to Grashopper Hops for CPython!"
 
-# @app.route('/upload', methods= ['GET', 'POST'])
-# def upload_file(filLocation, filename):
-#     # file = {'files': open(filLocation, 'rb')}
-#     file = request.files['files']
-#     # file.save('/Users/djangod/newTest.txt')
-#     # file = request.files[filLocation]
+@app.route('/upload', methods= ['GET', 'POST'])
+# def upload_file(fileLocation, filename):
+def upload_file(fileLocation):
+    # file = {'files': open(filLocation, 'rb')}
+    file = request.files['file']
+    # file.save('/Users/djangod/newTest.txt')
+    print ('filLocation', fileLocation)
+    # file = request.files[filLocation]
  
-#     # filename = secure_filename(file.filename) # revise this because this is important for security
-#     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-#     # return redirect(url_for('download_file', name=filename))
-#     return redirect(url_for('download_file', name=filename))
+    # filename = secure_filename(file.filename) # revise this because this is important for security
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'testing'))
+    # return redirect(url_for('download_file', name=filename))
+    return redirect(url_for('download_file', name='testing'))
 
-# def callFile(fileLocation):
-#     url = "http://127.0.0.1:5000/upload"
-#     files = {'files': open(fileLocation, 'rb')}
-#     r = requests.post(url, files=files)
+def callFile(fileLocation):
+    url = "http://127.0.0.1:5000/upload"
+    files = {'files': open(fileLocation, 'rb')}
+    r = requests.post(url, files=files)
 
-# def download_file(name):
-#     return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+def download_file(name):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], name)
     
 
 @hops.component(
@@ -83,7 +89,8 @@ def BELTED(run,  pdfFolder, pdfNamer, details, ignorDetails):
     print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
     if(run):
         # print (details, details, pdfFolder, pdfNamer, ignorDetails),
-        msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
+        # msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
+        msg = pdfLinker( pdfFolder, pdfNamer, details, ignorDetails),
         
         # return ['ran', details, details, pdfFolder, pdfNamer]
         return msg
@@ -92,20 +99,34 @@ def BELTED(run,  pdfFolder, pdfNamer, details, ignorDetails):
 
 
 
-def pdfLinker(app, pdfLinkFolder, pdfName, SearchText, excludeListInput ):
+def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
+    print ('pdfLinkFolder', pdfLinkFolder,pdfName)
+    # pdfLink = pdfLinkFolder + pdfName + '.pdf'
+    pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf')
+    app.config['UPLOAD_FOLDER'] = pdfLink
+    file_ids = ''
+    headers={'Username': 'abc@gmail.com', 'apikey':'123-456'}
+
+    f = open(pdfLink, 'rb')
+    files = {"file": (pdfLink, f)}
+    resp = requests.post("http://127.0.0.1:5000/upload", files=files, headers=headers )
+    print (resp.text)
+
     # pdfLinkFolder = sys.argv[1]
     # pdfName = sys.argv[2]
-    print (pdfLinkFolder,pdfName)
-    pdfLink = pdfLinkFolder + pdfName + '.pdf'
+    
     procName = pdfName + '.pdf'
     # ------- using fitz to read the text and search through to find items
     # ------- PDFwriter to writ stuff
     # callFile(pdfLink)
     # upload_file(pdfLink, pdfName)
+
+    urlpdfLink = app.config['UPLOAD_FOLDER']
     # urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
     ### READ IN PDF
-    # doc = fitz.open(urlpdfLink)
-    doc = fitz.open(pdfLink)
+    print (urlpdfLink)
+    doc = fitz.open(urlpdfLink)
+    # doc = fitz.open(pdfLink)
 
 
 
