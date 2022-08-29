@@ -59,10 +59,10 @@ def upload_file(fileLocation):
     # return redirect(url_for('download_file', name=filename))
     return redirect(url_for('download_file', name='testing'))
 
-def callFile(fileLocation):
-    url = "http://127.0.0.1:5000/upload"
-    files = {'files': open(fileLocation, 'rb')}
-    r = requests.post(url, files=files)
+# def callFile(fileLocation):
+#     url = "http://127.0.0.1:5000/upload"
+#     files = {'files': open(fileLocation, 'rb')}
+#     r = requests.post(url, files=files)
 
 def download_file(name):
     return send_from_directory(app.config["UPLOAD_FOLDER"], name)
@@ -102,7 +102,7 @@ def pdfer(run,  pdfFolder, pdfNamer, details, ignorDetails):
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     print ('pdfLinkFolder', pdfLinkFolder,pdfName)
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf')
+    pdfLink = os.path.join(pdfLinkFolder, pdfName[1:] + '.pdf')
     app.config['UPLOAD_FOLDER'] = pdfLink
     file_ids = ''
     headers={'Username': 'abc@gmail.com', 'apikey':'123-456'}
