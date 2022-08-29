@@ -103,7 +103,7 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     print ('pdfLinkFolder', pdfLinkFolder,pdfName)
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
     # pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
-    pdfLink = pdfLinkFolder + '\\' + pdfName + '.pdf' #strange issue with '\' being added to files path
+    pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
     app.config['UPLOAD_FOLDER'] = pdfLink
     file_ids = ''
     headers={'Username': 'abc@gmail.com', 'apikey':'123-456'}
