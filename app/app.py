@@ -47,17 +47,18 @@ def help():
 
 @app.route('/upload', methods= ['GET', 'POST'])
 # def upload_file(fileLocation, filename):
-def upload_file(fileLocation):
+def upload_file():
     # file = {'files': open(filLocation, 'rb')}
     file = request.files['file']
     # file.save('/Users/djangod/newTest.txt')
-    print ('filLocation', fileLocation)
+    # print ('filLocation', fileLocation)
     # file = request.files[filLocation]
  
     # filename = secure_filename(file.filename) # revise this because this is important for security
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'testing'))
+    # file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'testing'))
+    file.save(app.config['UPLOAD_FOLDER'])
     # return redirect(url_for('download_file', name=filename))
-    return redirect(url_for('download_file', name='testing'))
+    # return redirect(url_for('download_file', name='testing'))
 
 # def callFile(fileLocation):
 #     url = "http://127.0.0.1:5000/upload"
@@ -87,7 +88,8 @@ def download_file(name):
 
 def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
     print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
-    pdfFolder.replace("\\","/")
+    # pdfFolder.replace("\\","/")
+    # print ('pdfFolder', pdfFolder)
     if(run):
         # print (details, details, pdfFolder, pdfNamer, ignorDetails),
         # msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
@@ -101,10 +103,11 @@ def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
 
 
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
-    print ('pdfLinkFolder', pdfLinkFolder,pdfName)
+    
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    # pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
-    pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
+    pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
+    print ('pdfLinkFolder', pdfLink)
+    # pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
     app.config['UPLOAD_FOLDER'] = pdfLink
     file_ids = ''
     headers={'Username': 'abc@gmail.com', 'apikey':'123-456'}
