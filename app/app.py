@@ -69,8 +69,8 @@ def download_file(name):
     
 
 @hops.component(
-    "/BELTED",
-    name="BELTED",
+    "/pdfer",
+    name="pdfer",
     description="cook, conversationalist, adds links to pdf",
     icon="./img/belt.png",
     inputs=[
@@ -85,7 +85,7 @@ def download_file(name):
     ]
 )
 
-def BELTED(run,  pdfFolder, pdfNamer, details, ignorDetails):
+def pdfer(run,  pdfFolder, pdfNamer, details, ignorDetails):
     print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
     if(run):
         # print (details, details, pdfFolder, pdfNamer, ignorDetails),
@@ -109,7 +109,8 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
 
     f = open(pdfLink, 'rb')
     files = {"file": (pdfLink, f)}
-    resp = requests.post("http://127.0.0.1:5000/upload", files=files, headers=headers )
+    # resp = requests.post("http://127.0.0.1:5000/upload", files=files, headers=headers )
+    resp = requests.post("https://pdf-linking.herokuapp.com/upload", files=files, headers=headers )
     print (resp.text)
 
     # pdfLinkFolder = sys.argv[1]
