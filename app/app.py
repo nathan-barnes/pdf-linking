@@ -69,8 +69,8 @@ def download_file(name):
     
 
 @hops.component(
-    "/pdfer",
-    name="pdfer",
+    "/pdfering",
+    name="pdfering",
     description="cook, conversationalist, adds links to pdf",
     icon="./img/belt.png",
     inputs=[
@@ -85,12 +85,12 @@ def download_file(name):
     ]
 )
 
-def pdfer(run,  pdfFolder, pdfNamer, details, ignorDetails):
+def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
     print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
     if(run):
         # print (details, details, pdfFolder, pdfNamer, ignorDetails),
         # msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
-        msg = pdfLinker( pdfFolder, pdfNamer, details, ignorDetails),
+        msg = pdfLinker( pdfFolder, pdfNamer[1:], details, ignorDetails),
         
         # return ['ran', details, details, pdfFolder, pdfNamer]
         return msg
@@ -102,7 +102,7 @@ def pdfer(run,  pdfFolder, pdfNamer, details, ignorDetails):
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     print ('pdfLinkFolder', pdfLinkFolder,pdfName)
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    pdfLink = os.path.join(pdfLinkFolder, pdfName[1:] + '.pdf')
+    pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
     app.config['UPLOAD_FOLDER'] = pdfLink
     file_ids = ''
     headers={'Username': 'abc@gmail.com', 'apikey':'123-456'}
