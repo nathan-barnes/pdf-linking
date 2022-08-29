@@ -103,7 +103,7 @@ def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     print ('pdfLinkFolder', pdfLinkFolder,pdfName)
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
+    # pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
     pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
     app.config['UPLOAD_FOLDER'] = pdfLink
     file_ids = ''
