@@ -49,7 +49,7 @@ UPLOADS_PATH = join(app.root_path, UPLOAD_FOLDER)
 # UPLOADS_PATH = os.path.abspath('uploads')
 # UPLOADS_PATH = join(os.path.abspath(__file__), UPLOAD_FOLDER)
 # UPLOADS_PATH = './uploads'
-os.makedirs(UPLOADS_PATH, exists_ok=True)
+os.makedirs(UPLOADS_PATH, True)
 
 print ('UPLOADS_PATH', UPLOADS_PATH, os.path.abspath('uploads'), app.root_path, )
 
