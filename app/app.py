@@ -44,9 +44,9 @@ hops = hs.Hops(app)
 # UPLOAD_FOLDER = './uploads' #'C:\Users\nbarnes\Documents\GitHub\pdf-linking\app\app.py'
 UPLOAD_FOLDER = 'uploads' #'C:\Users\nbarnes\Documents\GitHub\pdf-linking\app\app.py'
 # UPLOADS_PATH = join(dirname(realpath(__file__)), UPLOAD_FOLDER)
-# UPLOADS_PATH = join(app.root_path, UPLOAD_FOLDER)
+UPLOADS_PATH = join(app.root_path, UPLOAD_FOLDER)
 # UPLOADS_PATH = os.path.abspath('uploads')
-UPLOADS_PATH = join(os.path.abspath(__file__), UPLOAD_FOLDER)
+# UPLOADS_PATH = join(os.path.abspath(__file__), UPLOAD_FOLDER)
 # UPLOADS_PATH = './uploads'
 
 print ('UPLOADS_PATH', UPLOADS_PATH, os.path.abspath('uploads'), app.root_path, )
