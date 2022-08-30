@@ -60,7 +60,7 @@ def help():
     return "Welcome to Grashopper Hops for CPython!"
 
 @app.route('/vars', methods= ['GET', 'POST'])
-async def defineUpVars():
+def defineUpVars():
     if request.method == 'POST':
       
         filePath =  request.headers['prefile']

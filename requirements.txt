@@ -1,9 +1,7 @@
 Flask==2.1.0
-flask[async]
 ghhops-server==1.5.3
 gunicorn==20.0.4
 requests==2.25.1
 rhino3dm==0.14.0
 pymupdf
 pyspellchecker
-webbrowser
