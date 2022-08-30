@@ -97,10 +97,10 @@ def upload_file():
 
         # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #perhaps heroku wants only folder
         file.save(app.config['UPLOAD_FOLDER'])
-        print('file saved')
+        print('file saved', file)
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         print('UPLOAD_FILE updated')
-        processPdf()
+        processPdf(file)
         print('processpdf')
         # return 'complete'
         app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'],filename[:-4] + '_Belted.pdf')
@@ -200,8 +200,9 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText ):
 
     
 
-def processPdf():
+def processPdf(file):
     # ----------------commenting below to isolate upload--------------------------------------------------------
+    print('imported file', file)
     urlpdfLink = app.config['UPLOAD_FILE']
     print ('processPdf Path', os.path.abspath('uploads'))
 
