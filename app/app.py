@@ -48,6 +48,7 @@ print ('UPLOADS_PATH', UPLOADS_PATH, os.path.abspath('uploads'))
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOADS_PATH
+app.config['DOWNLOAD_FILE'] = UPLOADS_PATH
 global textToSeach 
 global textToExplude
 
