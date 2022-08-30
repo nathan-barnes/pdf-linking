@@ -71,7 +71,6 @@ def defineUpVars():
         filename = request.headers['name']
         
         textToSeach = request.headers['SearchText']
-        textToExclude = request.headers['excludeListInput']
         # print ('filePath', filePath)
 
         # webbrowser.open('http://127.0.0.1:5000/upload', new=2)
@@ -174,14 +173,15 @@ def uploadWindow():
     ]
 )
 
-def kiko(run,  pdfFolder, pdfNamer, details, ignorDetails):
-    print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
+# def kiko(run,  pdfFolder, pdfNamer, details, ignorDetails):
+def kiko(run,  pdfFolder, pdfNamer, details):
+    print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n')
     # pdfFolder.replace("\\","/")
     # print ('pdfFolder', pdfFolder)
     if(run):
         # print (details, details, pdfFolder, pdfNamer, ignorDetails),
         # msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
-        msg = pdfLinker( pdfFolder, pdfNamer, details, ignorDetails),
+        msg = pdfLinker( pdfFolder, pdfNamer, details),
         
         # return ['ran', details, details, pdfFolder, pdfNamer]
         return msg
@@ -189,13 +189,14 @@ def kiko(run,  pdfFolder, pdfNamer, details, ignorDetails):
         return 'waiting'
 
 
-def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
+# def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
+def pdfLinker( pdfLinkFolder, pdfName, SearchText ):
     
     # textToSeach = SearchText
     # textToExclude = excludeListInput
 
     app.config['param_textToSeach'] = SearchText
-    app.config['param_textToExlude'] = excludeListInput
+    app.config['param_textToExlude'] = 'excludeListInput'
 
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
     
@@ -211,7 +212,7 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
 
     # f = open(pdfLink, 'rb')
     prefiles = {"prefile": pdfLink}
-    header = {"name": pdfName, "prefile": pdfLink, 'SearchText': SearchText, 'excludeListInput': excludeListInput}
+    header = {"name": pdfName, "prefile": pdfLink, 'SearchText': SearchText}
     # resp = requests.post("http://127.0.0.1:5000/upload", files=files, headers=headers )
     # resp = requests.post("https://pdf-linking.herokuapp.com/upload", prefiles=prefiles, names=names)
     # requests.post("http://127.0.0.1:5000/upload", files=prefiles, headers=names)
