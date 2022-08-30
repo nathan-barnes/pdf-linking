@@ -205,8 +205,8 @@ def processPdf():
     urlpdfLink = app.config['UPLOAD_FILE']
     print ('processPdf Path', os.path.abspath('uploads'))
 
-    # for each in os.listdir('/app/app/uploads/'):
-    #     print(each)
+    for each in os.listdir(os.path.abspath('uploads')):
+        print(each)
 
     # urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
     ### READ IN PDF
