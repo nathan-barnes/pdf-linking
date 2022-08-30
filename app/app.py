@@ -108,8 +108,8 @@ def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    # UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/uploads/..')
-    # print (UPLOADS_PATH)
+    UPLOADS_PATH = join(dirname(realpath(__file__)))
+    print (UPLOADS_PATH)
     for f in os.listdir(pdfLinkFolder):
         print(f)
 
