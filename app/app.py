@@ -49,11 +49,13 @@ print ('UPLOADS_PATH', UPLOADS_PATH, os.path.abspath('uploads'))
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOADS_PATH
 app.config['DOWNLOAD_FILE'] = UPLOADS_PATH
-global textToSeach 
-global textToExplude
+# global textToSeach 
+# global textToExplude
 
 filePath = 'testing'
 
+global textToSeach
+global textToExclude
 
 @app.route("/help",  methods=['GET', 'POST'])
 def help():
@@ -65,13 +67,15 @@ def defineUpVars():
       
         filePath =  request.headers['prefile']
         filename = request.headers['name']
-
+        
+        textToSeach = request.headers['SearchText']
+        textToExclude = request.headers['excludeListInput']
         print ('filePath', filePath)
 
         # webbrowser.open('http://127.0.0.1:5000/upload', new=2)
         webbrowser.open('https://pdf-linking.herokuapp.com/upload', new=2)
 
-    return 'None'
+    return textToSeach, textToExclude
 
 @app.route('/upload', methods= ['GET', 'POST'])
 # def upload_file(fileLocation, filename):
@@ -181,12 +185,11 @@ def pdfer(run,  pdfFolder, pdfNamer, details, ignorDetails):
         return 'waiting'
 
 
-
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
-    global textToSeach
-    textToSeach = SearchText
-    global textToExclude
-    textToExclude = excludeListInput
+    
+    # textToSeach = SearchText
+    
+    # textToExclude = excludeListInput
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
     
     # for f in os.listdir(pdfLinkFolder):
@@ -201,7 +204,7 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
 
     # f = open(pdfLink, 'rb')
     prefiles = {"prefile": pdfLink}
-    header = {"name": pdfName, "prefile": pdfLink}
+    header = {"name": pdfName, "prefile": pdfLink, 'SearchText': SearchText, 'excludeListInput': excludeListInput}
     # resp = requests.post("http://127.0.0.1:5000/upload", files=files, headers=headers )
     # resp = requests.post("https://pdf-linking.herokuapp.com/upload", prefiles=prefiles, names=names)
     # requests.post("http://127.0.0.1:5000/upload", files=prefiles, headers=names)
@@ -218,6 +221,8 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     # ------- PDFwriter to writ stuff
     # callFile(pdfLink)
     # upload_file(pdfLink, pdfName)
+
+    return textToSeach, textToExclude
 
     
 
