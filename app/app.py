@@ -99,8 +99,9 @@ def upload_file():
         file.save(app.config['UPLOAD_FOLDER'])
         print('file saved', file)
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        savedFilePath= os.path.join(app.config['UPLOAD_FOLDER'], filename)
         print('UPLOAD_FILE updated')
-        processPdf(file)
+        processPdf(savedFilePath)
         print('processpdf')
         # return 'complete'
         app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'],filename[:-4] + '_Belted.pdf')
@@ -200,19 +201,19 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText ):
 
     
 
-def processPdf(file):
+def processPdf(savedFilePath):
     # ----------------commenting below to isolate upload--------------------------------------------------------
-    print('imported file', file)
+    print('imported file', savedFilePath)
     urlpdfLink = app.config['UPLOAD_FILE']
     print ('processPdf Path', os.path.abspath('uploads'))
 
-    for each in os.listdir(os.path.abspath('uploads')):
-        print(each)
+    # for each in os.listdir(os.path.abspath('uploads')):
+    #     print(each)
 
     # urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
     ### READ IN PDF
     print ('urlpdfLink', urlpdfLink)
-    doc = fitz.open(urlpdfLink)
+    doc = fitz.open(savedFilePath)
     # doc = fitz.Document(urlpdfLink)
     print ('fitz open')
     # doc = fitz.open(pdfLink)
