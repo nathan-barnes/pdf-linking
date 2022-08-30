@@ -51,10 +51,8 @@ app.config['UPLOAD_FOLDER'] = UPLOADS_PATH
 app.config['DOWNLOAD_FILE'] = UPLOADS_PATH
 app.config['param_textToSeach'] = ''
 app.config['param_textToExlude'] = ''
-# global textToSeach 
-# global textToExplude
 
-filePath = 'testing'
+filePath = 'I will fix this....'
 
 global textToSeach
 global textToExclude
@@ -71,10 +69,9 @@ def defineUpVars():
         filename = request.headers['name']
         
         textToSeach = request.headers['SearchText']
-        # print ('filePath', filePath)
 
-        # webbrowser.open('http://127.0.0.1:5000/upload', new=2)
-        webbrowser.open('https://pdf-linking.herokuapp.com/upload', new=2)
+        webbrowser.open('http://127.0.0.1:5000/upload', new=2)
+        # webbrowser.open('https://pdf-linking.herokuapp.com/upload', new=2)
 
         # return textToSeach, textToExclude
 
@@ -84,28 +81,20 @@ def defineUpVars():
 # def upload_file(fileLocation, filename):
 def upload_file():
     if request.method == 'POST':
-        # file = {'files': open(filLocation, 'rb')}
-        # file = request.files['file']
-        # filePath = request.headers['prefile']
-        # filename = request.headers['name']
         file = request.files['file']
         filename = file.filename
         print ('file', file, filename)
-        # file = request.files[filLocation]
 
     
         # filename = secure_filename(file.filename) # revise this because this is important for security
+        print ('os.path.join(app.config[], filename)', os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        # file.save(app.config['UPLOAD_FOLDER'])
-        # return redirect(url_for('download_file', name=filename))
-        # return redirect(url_for('download_file', name=filename))
         processPdf()
         # return 'complete'
         app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'],filename[:-4] + '_Belted.pdf')
         return redirect('/file-downloads/')
-        # return redirect('/uploads/'+ filename[:-4] + '_Belted.pdf')
-        # return redirect(url_for('download_file', name='testing'))
 
     return '''
     <!doctype html>
@@ -128,10 +117,8 @@ def upload_file():
 #     r = requests.post(url, files=files)
 
 # Download API
-# @app.route("/uploads/<filename>", methods = ['GET'])
 @app.route("/file-downloads/", methods = ['GET'])
 def download_file():
-# def download_file(filename):
     return render_template('download.html')
     # return render_template('download.html',value=filename)
 
@@ -139,16 +126,10 @@ def download_file():
 @app.route('/uploads/')
 # def return_files_tut(filename):
 def return_files_tut():
-    # fileName =  request.headers['fileName']
     print ('send_from_directory', app.config["UPLOAD_FOLDER"])
-    # return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
-    # folderpath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
     folderpath = os.path.join(app.config["UPLOAD_FOLDER"])
     name = app.config['DOWNLOAD_FILE']
     print('folderpath', folderpath, name)
-    # return send_file(fileName, as_attachment=True)
-    # return send_file(folderpath, as_attachment=True, attachment_filename='testing')
-    # return send_file(name, as_attachment=True, attachment_filename='testing.pdf')
     return send_file(name, as_attachment=True)
     
 def uploadWindow():
@@ -179,8 +160,6 @@ def kiko(run,  pdfFolder, pdfNamer, details):
     # pdfFolder.replace("\\","/")
     # print ('pdfFolder', pdfFolder)
     if(run):
-        # print (details, details, pdfFolder, pdfNamer, ignorDetails),
-        # msg = pdfLinker(app,  pdfFolder, pdfNamer, details, ignorDetails),
         msg = pdfLinker( pdfFolder, pdfNamer, details),
         
         # return ['ran', details, details, pdfFolder, pdfNamer]
@@ -198,39 +177,16 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText ):
     app.config['param_textToSeach'] = SearchText
     app.config['param_textToExlude'] = 'excludeListInput'
 
-    # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    
-    # for f in os.listdir(pdfLinkFolder):
-        # print(f)
 
-    # pdfLink = os.path.join('join(dirname(realpath', pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
-    # print ('pdfLinkFolder', pdfLink)
     pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
-    # app.config['UPLOAD_FOLDER'] = pdfLink
-    # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    # headers={'Username': 'abc@gmail.com', 'apikey':'123-456'}
 
     # f = open(pdfLink, 'rb')
     prefiles = {"prefile": pdfLink}
     header = {"name": pdfName, "prefile": pdfLink, 'SearchText': SearchText}
-    # resp = requests.post("http://127.0.0.1:5000/upload", files=files, headers=headers )
-    # resp = requests.post("https://pdf-linking.herokuapp.com/upload", prefiles=prefiles, names=names)
-    # requests.post("http://127.0.0.1:5000/upload", files=prefiles, headers=names)
-    # requests.post("http://127.0.0.1:5000/vars", files=prefiles, headers=header)
-    requests.post("https://pdf-linking.herokuapp.com/vars", files=prefiles, headers=header)
+    requests.post("http://127.0.0.1:5000/vars", files=prefiles, headers=header)
+    # requests.post("https://pdf-linking.herokuapp.com/vars", files=prefiles, headers=header)
     
-    # print (resp.text)
-
-    # pdfLinkFolder = sys.argv[1]
-    # pdfName = sys.argv[2]
     
-    procName = pdfName + '.pdf'
-    # ------- using fitz to read the text and search through to find items
-    # ------- PDFwriter to writ stuff
-    # callFile(pdfLink)
-    # upload_file(pdfLink, pdfName)
-
-    # return textToSeach, textToExclude
 
     
 
