@@ -46,7 +46,8 @@ UPLOAD_FOLDER = 'uploads' #'C:\Users\nbarnes\Documents\GitHub\pdf-linking\app\ap
 # UPLOADS_PATH = join(dirname(realpath(__file__)), UPLOAD_FOLDER)
 # UPLOADS_PATH = join(app.root_path, UPLOAD_FOLDER)
 # UPLOADS_PATH = os.path.abspath('uploads')
-UPLOADS_PATH = './uploads'
+UPLOADS_PATH = join(os.path.abspath(__file__), UPLOAD_FOLDER)
+# UPLOADS_PATH = './uploads'
 
 print ('UPLOADS_PATH', UPLOADS_PATH, os.path.abspath('uploads'), app.root_path, )
 
@@ -94,8 +95,11 @@ def upload_file():
         print ('os.path.join(app.config[], filename)', os.path.join(app.config['UPLOAD_FOLDER']))
 
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        print('file saved')
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        print('UPLOAD_FILE updated')
         processPdf()
+        print('processpdf')
         # return 'complete'
         app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'],filename[:-4] + '_Belted.pdf')
         return redirect('/file-downloads/')
