@@ -109,9 +109,9 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
     UPLOADS_PATH = join(dirname(realpath(__file__)))
-    print (UPLOADS_PATH)
-    for f in os.listdir(pdfLinkFolder):
-        print(f)
+    print ('UPLOADS_PATH', UPLOADS_PATH)
+    # for f in os.listdir(pdfLinkFolder):
+        # print(f)
 
     pdfLink = os.path.join('join(dirname(realpath', pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
     print ('pdfLinkFolder', pdfLink)
