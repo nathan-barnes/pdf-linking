@@ -150,8 +150,8 @@ def uploadWindow():
 
 
 @hops.component(
-    "/pdfering",
-    name="pdfering",
+    "/pdfer",
+    name="pdfer",
     description="cook, conversationalist, adds links to pdf",
     icon="./img/belt.png",
     inputs=[
@@ -166,7 +166,7 @@ def uploadWindow():
     ]
 )
 
-def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
+def pdfer(run,  pdfFolder, pdfNamer, details, ignorDetails):
     print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
     # pdfFolder.replace("\\","/")
     # print ('pdfFolder', pdfFolder)
