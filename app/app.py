@@ -1,3 +1,4 @@
+from msilib.schema import Directory
 from flask import Flask, request, flash, redirect, url_for, send_from_directory, send_file, render_template
 import ghhops_server as hs
 
@@ -94,7 +95,7 @@ def upload_file():
         # filename = secure_filename(file.filename) # revise this because this is important for security
         print ('os.path.join(app.config[], filename)', os.path.join(app.config['UPLOAD_FOLDER']))
 
-        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #perhaps heroku wants only folder
         file.save(app.config['UPLOAD_FOLDER'])
         print('file saved')
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -202,10 +203,14 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText ):
 def processPdf():
     # ----------------commenting below to isolate upload--------------------------------------------------------
     urlpdfLink = app.config['UPLOAD_FILE']
+    for each in os.listdir('/app/app/uploads/'):
+        print(each)
     # urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
     ### READ IN PDF
     print ('urlpdfLink', urlpdfLink)
     doc = fitz.open(urlpdfLink)
+    doc = fitz.Document(urlpdfLink)
+    print ('fitz open')
     # doc = fitz.open(pdfLink)
     SearchText = app.config['param_textToSeach']
     excludeListInput = app.config['param_textToExlude']
