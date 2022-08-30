@@ -77,7 +77,7 @@ def defineUpVars():
         # webbrowser.open('http://127.0.0.1:5000/upload', new=2)
         webbrowser.open('https://pdf-linking.herokuapp.com/upload', new=2)
 
-        return textToSeach, textToExclude
+        # return textToSeach, textToExclude
 
     return 'none'
 
@@ -229,7 +229,7 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     # callFile(pdfLink)
     # upload_file(pdfLink, pdfName)
 
-    return textToSeach, textToExclude
+    # return textToSeach, textToExclude
 
     
 
