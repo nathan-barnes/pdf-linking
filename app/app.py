@@ -40,7 +40,7 @@ hops = hs.Hops(app)
 #-------------------------------------------------------------------------------------------Global vars
 #attempt to fix file upload: https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
 # UPLOAD_FOLDER = '/path/to/the/uploads'
-UPLOAD_FOLDER = 'C:/uploads'
+UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -108,16 +108,16 @@ def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    UPLOADS_PATH = join(dirname(realpath(__file__)))
+    UPLOADS_PATH = join(dirname(realpath(__file__)), UPLOAD_FOLDER)
     print ('UPLOADS_PATH', UPLOADS_PATH)
     # for f in os.listdir(pdfLinkFolder):
         # print(f)
 
-    pdfLink = os.path.join('join(dirname(realpath', pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
-    print ('pdfLinkFolder', pdfLink)
-    # pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
-    app.config['UPLOAD_FOLDER'] = pdfLink
-    file_ids = ''
+    # pdfLink = os.path.join('join(dirname(realpath', pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
+    # print ('pdfLinkFolder', pdfLink)
+    pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
+    # app.config['UPLOAD_FOLDER'] = pdfLink
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     headers={'Username': 'abc@gmail.com', 'apikey':'123-456'}
 
     f = open(pdfLink, 'rb')
