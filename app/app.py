@@ -49,6 +49,8 @@ print ('UPLOADS_PATH', UPLOADS_PATH, os.path.abspath('uploads'))
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOADS_PATH
 app.config['DOWNLOAD_FILE'] = UPLOADS_PATH
+app.config['param_textToSeach'] = ''
+app.config['param_textToExlude'] = ''
 # global textToSeach 
 # global textToExplude
 
@@ -74,7 +76,7 @@ def defineUpVars():
 
         # webbrowser.open('http://127.0.0.1:5000/upload', new=2)
         webbrowser.open('https://pdf-linking.herokuapp.com/upload', new=2)
-        
+
         return textToSeach, textToExclude
 
     return 'none'
@@ -190,8 +192,11 @@ def pdfer(run,  pdfFolder, pdfNamer, details, ignorDetails):
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     
     # textToSeach = SearchText
-    
     # textToExclude = excludeListInput
+
+    app.config['param_textToSeach'] = SearchText
+    app.config['param_textToExlude'] = excludeListInput
+
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
     
     # for f in os.listdir(pdfLinkFolder):
@@ -236,8 +241,10 @@ def processPdf():
     print ('urlpdfLink', urlpdfLink)
     doc = fitz.open(urlpdfLink)
     # doc = fitz.open(pdfLink)
-    SearchText = textToSeach
-    excludeListInput = textToExclude
+    SearchText = app.config['param_textToSeach']
+    excludeListInput = app.config['param_textToExlude']
+
+
 
     # SearchText = ['XC-001','XC-A101','XC-D101', 'XC-A201', 'XC-A501','XC-A502','XC-A503','XC-A504','XC-A505','XC-A506', 'XC-D501', 'XC-D502']
     # SearchText = sys.argv[3]
