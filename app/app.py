@@ -1,4 +1,4 @@
-from flask import Flask, request, flash, redirect, url_for, send_from_directory
+from flask import Flask, request, flash, redirect, url_for, send_from_directory, send_file, render_template
 import ghhops_server as hs
 
 #Description
@@ -18,6 +18,7 @@ from spellchecker import SpellChecker #need to install
 from os import path, getcwd
 import os
 import requests
+import webbrowser
 
 # import json
 
@@ -33,44 +34,119 @@ from os.path import join, dirname, realpath
 
 
 #-------------------------------------------------------------------------------------------register hops app as middleware
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 hops = hs.Hops(app)
 # hops: hs.HopsFlask = hs.Hops(app)
 
 #-------------------------------------------------------------------------------------------Global vars
 #attempt to fix file upload: https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
 # UPLOAD_FOLDER = '/path/to/the/uploads'
-UPLOAD_FOLDER = './uploads'
+# UPLOAD_FOLDER = './uploads' #'C:\Users\nbarnes\Documents\GitHub\pdf-linking\app\app.py'
+UPLOAD_FOLDER = 'uploads' #'C:\Users\nbarnes\Documents\GitHub\pdf-linking\app\app.py'
+UPLOADS_PATH = join(dirname(realpath(__file__)), UPLOAD_FOLDER)
+print ('UPLOADS_PATH', UPLOADS_PATH, os.path.abspath('uploads'))
+
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOADS_PATH
+global textToSeach 
+global textToExplude
+
+filePath = 'testing'
+
 
 @app.route("/help",  methods=['GET', 'POST'])
 def help():
     return "Welcome to Grashopper Hops for CPython!"
 
+@app.route('/vars', methods= ['GET', 'POST'])
+async def defineUpVars():
+    if request.method == 'POST':
+      
+        filePath =  request.headers['prefile']
+        filename = request.headers['name']
+
+        print ('filePath', filePath)
+
+        # webbrowser.open('http://127.0.0.1:5000/upload', new=2)
+        webbrowser.open('https://pdf-linking.herokuapp.com/upload', new=2)
+
+    return 'None'
+
 @app.route('/upload', methods= ['GET', 'POST'])
 # def upload_file(fileLocation, filename):
 def upload_file():
-    # file = {'files': open(filLocation, 'rb')}
-    file = request.files['file']
-    # file.save('/Users/djangod/newTest.txt')
-    # print ('filLocation', fileLocation)
-    # file = request.files[filLocation]
- 
-    # filename = secure_filename(file.filename) # revise this because this is important for security
-    # file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'testing'))
-    file.save(app.config['UPLOAD_FOLDER'])
-    # return redirect(url_for('download_file', name=filename))
-    # return redirect(url_for('download_file', name='testing'))
+    if request.method == 'POST':
+        # file = {'files': open(filLocation, 'rb')}
+        # file = request.files['file']
+        # filePath = request.headers['prefile']
+        # filename = request.headers['name']
+        file = request.files['file']
+        filename = file.filename
+        print ('file', file, filename)
+        # file = request.files[filLocation]
+
+    
+        # filename = secure_filename(file.filename) # revise this because this is important for security
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        # file.save(app.config['UPLOAD_FOLDER'])
+        # return redirect(url_for('download_file', name=filename))
+        # return redirect(url_for('download_file', name=filename))
+        processPdf()
+        # return 'complete'
+        app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'],filename[:-4] + '_Belted.pdf')
+        return redirect('/file-downloads/')
+        # return redirect('/uploads/'+ filename[:-4] + '_Belted.pdf')
+        # return redirect(url_for('download_file', name='testing'))
+
+    return '''
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+      <h1>{}</h1>
+    </form>
+    '''.format(filePath)
+
+
+       
+
 
 # def callFile(fileLocation):
 #     url = "http://127.0.0.1:5000/upload"
 #     files = {'files': open(fileLocation, 'rb')}
 #     r = requests.post(url, files=files)
 
-def download_file(name):
-    return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+# Download API
+# @app.route("/uploads/<filename>", methods = ['GET'])
+@app.route("/file-downloads/", methods = ['GET'])
+def download_file():
+# def download_file(filename):
+    return render_template('download.html')
+    # return render_template('download.html',value=filename)
+
+# @app.route('/uploads/<path:filename>')
+@app.route('/uploads/')
+# def return_files_tut(filename):
+def return_files_tut():
+    # fileName =  request.headers['fileName']
+    print ('send_from_directory', app.config["UPLOAD_FOLDER"])
+    # return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+    # folderpath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+    folderpath = os.path.join(app.config["UPLOAD_FOLDER"])
+    name = app.config['DOWNLOAD_FILE']
+    print('folderpath', folderpath, name)
+    # return send_file(fileName, as_attachment=True)
+    # return send_file(folderpath, as_attachment=True, attachment_filename='testing')
+    # return send_file(name, as_attachment=True, attachment_filename='testing.pdf')
+    return send_file(name, as_attachment=True)
     
+def uploadWindow():
+    return''
+
+
 
 @hops.component(
     "/pdfering",
@@ -106,10 +182,12 @@ def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
 
 
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
-    
+    global textToSeach
+    textToSeach = SearchText
+    global textToExclude
+    textToExclude = excludeListInput
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    UPLOADS_PATH = join(dirname(realpath(__file__)), UPLOAD_FOLDER)
-    print ('UPLOADS_PATH', UPLOADS_PATH)
+    
     # for f in os.listdir(pdfLinkFolder):
         # print(f)
 
@@ -117,14 +195,19 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     # print ('pdfLinkFolder', pdfLink)
     pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
     # app.config['UPLOAD_FOLDER'] = pdfLink
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    headers={'Username': 'abc@gmail.com', 'apikey':'123-456'}
+    # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    # headers={'Username': 'abc@gmail.com', 'apikey':'123-456'}
 
-    f = open(pdfLink, 'rb')
-    files = {"file": (pdfLink, f)}
+    # f = open(pdfLink, 'rb')
+    prefiles = {"prefile": pdfLink}
+    header = {"name": pdfName, "prefile": pdfLink}
     # resp = requests.post("http://127.0.0.1:5000/upload", files=files, headers=headers )
-    resp = requests.post("https://pdf-linking.herokuapp.com/upload", files=files, headers=headers )
-    print (resp.text)
+    # resp = requests.post("https://pdf-linking.herokuapp.com/upload", prefiles=prefiles, names=names)
+    # requests.post("http://127.0.0.1:5000/upload", files=prefiles, headers=names)
+    # requests.post("http://127.0.0.1:5000/vars", files=prefiles, headers=header)
+    requests.post("https://pdf-linking.herokuapp.com/vars", files=prefiles, headers=header)
+    
+    # print (resp.text)
 
     # pdfLinkFolder = sys.argv[1]
     # pdfName = sys.argv[2]
@@ -135,14 +218,18 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     # callFile(pdfLink)
     # upload_file(pdfLink, pdfName)
 
-    urlpdfLink = app.config['UPLOAD_FOLDER']
+    
+
+def processPdf():
+    # ----------------commenting below to isolate upload--------------------------------------------------------
+    urlpdfLink = app.config['UPLOAD_FILE']
     # urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
     ### READ IN PDF
-    print (urlpdfLink)
+    print ('urlpdfLink', urlpdfLink)
     doc = fitz.open(urlpdfLink)
     # doc = fitz.open(pdfLink)
-
-
+    SearchText = textToSeach
+    excludeListInput = textToExclude
 
     # SearchText = ['XC-001','XC-A101','XC-D101', 'XC-A201', 'XC-A501','XC-A502','XC-A503','XC-A504','XC-A505','XC-A506', 'XC-D501', 'XC-D502']
     # SearchText = sys.argv[3]
@@ -319,13 +406,21 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
 
     
     # doc.ez_save(pdfLinkFolder + pdfName + '_Belted.pdf')
-    doc.ez_save(pdfLink[:-4] + '_Belted.pdf')
+    # doc.ez_save(pdfLink[:-4] + '_Belted.pdf')
+    pdfed = urlpdfLink[:-4] + '_Belted.pdf'
+    pdfedFile = urlpdfLink.split('\\')[-1]#[:-4] + '_Belted.pdf'
+    doc.ez_save(pdfed)
     # download_file(pdfLink[:-4] + '_Belted.pdf')
-
+    #------end comment
+    headers={'fileName': pdfed}
     
+    # download_file(pdfed)
+    # requests.post("http://127.0.0.1:5000/uploads", headers=headers)
+    print ('pdfedFile', pdfedFile)
+    # webbrowser.open('http://127.0.0.1:5000/uploads/{}'.format(pdfedFile[:-4] + '_Belted.pdf'), new=2)
+
+
     return 'processed'
-
-
 
 
 
