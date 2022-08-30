@@ -208,8 +208,8 @@ def processPdf():
     # urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
     ### READ IN PDF
     print ('urlpdfLink', urlpdfLink)
-    # doc = fitz.open(urlpdfLink)
-    doc = fitz.Document(urlpdfLink)
+    doc = fitz.open(urlpdfLink)
+    # doc = fitz.Document(urlpdfLink)
     print ('fitz open')
     # doc = fitz.open(pdfLink)
     SearchText = app.config['param_textToSeach']
