@@ -87,7 +87,7 @@ def upload_file():
 
     
         # filename = secure_filename(file.filename) # revise this because this is important for security
-        print ('os.path.join(app.config[], filename)', os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        print ('os.path.join(app.config[], filename)', os.path.join(app.config['UPLOAD_FOLDER']))
 
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
