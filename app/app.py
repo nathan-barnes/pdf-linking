@@ -203,8 +203,11 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText ):
 def processPdf():
     # ----------------commenting below to isolate upload--------------------------------------------------------
     urlpdfLink = app.config['UPLOAD_FILE']
-    for each in os.listdir('/app/app/uploads/'):
-        print(each)
+    print ('processPdf Path', UPLOADS_PATH, os.path.abspath('uploads'))
+
+    # for each in os.listdir('/app/app/uploads/'):
+    #     print(each)
+
     # urlpdfLink = app.config['UPLOAD_FOLDER']+ '//' + procName
     ### READ IN PDF
     print ('urlpdfLink', urlpdfLink)
