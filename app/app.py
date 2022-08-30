@@ -28,6 +28,9 @@ import requests
 import sys
 sys.path.append("C:\Python38\Lib\site-packages")
 
+from os.path import join, dirname, realpath
+
+
 
 #-------------------------------------------------------------------------------------------register hops app as middleware
 app = Flask(__name__)
@@ -105,7 +108,12 @@ def pdfering(run,  pdfFolder, pdfNamer, details, ignorDetails):
 def pdfLinker( pdfLinkFolder, pdfName, SearchText, excludeListInput ):
     
     # pdfLink = pdfLinkFolder + pdfName + '.pdf'
-    pdfLink = os.path.join(pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
+    # UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/uploads/..')
+    # print (UPLOADS_PATH)
+    for f in os.listdir(pdfLinkFolder):
+        print(f)
+
+    pdfLink = os.path.join('join(dirname(realpath', pdfLinkFolder, pdfName + '.pdf') #strange issue with '\' being added to files path
     print ('pdfLinkFolder', pdfLink)
     # pdfLink = pdfLinkFolder + '/' + pdfName + '.pdf' #strange issue with '\' being added to files path
     app.config['UPLOAD_FOLDER'] = pdfLink
