@@ -6,3 +6,4 @@ requests==2.25.1
 rhino3dm==0.14.0
 pymupdf
 pyspellchecker
+webbrowser
