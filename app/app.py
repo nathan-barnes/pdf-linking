@@ -206,7 +206,7 @@ def processPdf(savedFilePath):
     print('imported file', savedFilePath)
     urlpdfLink = app.config['UPLOAD_FILE']
     print ('processPdf Path', os.path.abspath('uploads'))
-    print('file test', os.path.isfile(urlpdfLink) )
+    print('file test', os.path.isfile(savedFilePath) )
 
     # for each in os.listdir(os.path.abspath('uploads')):
     #     print(each)
