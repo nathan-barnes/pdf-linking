@@ -72,7 +72,7 @@ def defineUpVars():
         
         textToSeach = request.headers['SearchText']
         textToExclude = request.headers['excludeListInput']
-        print ('filePath', filePath)
+        # print ('filePath', filePath)
 
         # webbrowser.open('http://127.0.0.1:5000/upload', new=2)
         webbrowser.open('https://pdf-linking.herokuapp.com/upload', new=2)
@@ -158,23 +158,23 @@ def uploadWindow():
 
 
 @hops.component(
-    "/pdfer",
-    name="pdfer",
+    "/kiko",
+    name="kiko",
     description="cook, conversationalist, adds links to pdf",
-    icon="./img/belt.png",
+    icon="./img/kiko.png",
     inputs=[
         hs.HopsBoolean("run", "R", "run the component"),
         hs.HopsString("pdfFolder", "pdf", "pdf location "),
         hs.HopsString("pdfNamer", "name", "pdfn ame to link with details"),
         hs.HopsString("details", "D", "details list to link"),
-        hs.HopsString("ignorDetails", "iD", "details to ignore"),
+        # hs.HopsString("ignorDetails", "iD", "details to ignore"),
     ],
     outputs=[
         hs.HopsString("oFile", "of", "output file path for pdf"),
     ]
 )
 
-def pdfer(run,  pdfFolder, pdfNamer, details, ignorDetails):
+def kiko(run,  pdfFolder, pdfNamer, details, ignorDetails):
     print ('pdfFolder', pdfFolder , '\n', 'pdfNamer', pdfNamer, '\n', 'details', details, '\n', 'ignorDetails', ignorDetails)
     # pdfFolder.replace("\\","/")
     # print ('pdfFolder', pdfFolder)
