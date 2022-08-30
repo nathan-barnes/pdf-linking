@@ -70,7 +70,7 @@ def defineUpVars():
         
         textToSeach = request.headers['SearchText']
 
-        webbrowser.open('http://127.0.0.1:5000/upload', new=2)
+        #webbrowser.open('http://127.0.0.1:5000/upload', new=2) #dev
         # webbrowser.open('https://pdf-linking.herokuapp.com/upload', new=2)
 
         # return textToSeach, textToExclude
@@ -88,7 +88,7 @@ def upload_file():
     
         # filename = secure_filename(file.filename) # revise this because this is important for security
         print ('os.path.join(app.config[], filename)', os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        
+
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         processPdf()
@@ -183,7 +183,7 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText ):
     # f = open(pdfLink, 'rb')
     prefiles = {"prefile": pdfLink}
     header = {"name": pdfName, "prefile": pdfLink, 'SearchText': SearchText}
-    requests.post("http://127.0.0.1:5000/vars", files=prefiles, headers=header)
+    # requests.post("http://127.0.0.1:5000/vars", files=prefiles, headers=header) #dev
     # requests.post("https://pdf-linking.herokuapp.com/vars", files=prefiles, headers=header)
     
     
