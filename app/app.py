@@ -1,4 +1,4 @@
-from msilib.schema import Directory
+# from msilib.schema import Directory
 from flask import Flask, request, flash, redirect, url_for, send_from_directory, send_file, render_template
 import ghhops_server as hs
 
@@ -203,7 +203,7 @@ def pdfLinker( pdfLinkFolder, pdfName, SearchText ):
 def processPdf():
     # ----------------commenting below to isolate upload--------------------------------------------------------
     urlpdfLink = app.config['UPLOAD_FILE']
-    print ('processPdf Path', UPLOADS_PATH, os.path.abspath('uploads'))
+    print ('processPdf Path', os.path.abspath('uploads'))
 
     # for each in os.listdir('/app/app/uploads/'):
     #     print(each)
