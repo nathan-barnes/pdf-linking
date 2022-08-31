@@ -222,7 +222,7 @@ def processPdf(savedFilePath):
     print ('urlpdfLink', urlpdfLink)
     doc = fitz.open(savedFilePath)
     # doc = fitz.Document(urlpdfLink)
-    print ('fitz open')
+    print ('fitz open', doc)
     # doc = fitz.open(pdfLink)
     SearchText = app.config['param_textToSeach']
     excludeListInput = app.config['param_textToExlude']
@@ -405,6 +405,7 @@ def processPdf(savedFilePath):
     
     # doc.ez_save(pdfLinkFolder + pdfName + '_Belted.pdf')
     # doc.ez_save(pdfLink[:-4] + '_Belted.pdf')
+    print('pre save')
     pdfed = urlpdfLink[:-4] + '_Belted.pdf'
     pdfedFile = urlpdfLink.split('\\')[-1]#[:-4] + '_Belted.pdf'
     doc.ez_save(pdfed)
