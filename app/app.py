@@ -49,7 +49,7 @@ UPLOADS_PATH = join(app.root_path, UPLOAD_FOLDER)
 # UPLOADS_PATH = os.path.abspath('uploads')
 # UPLOADS_PATH = join(os.path.abspath(__file__), UPLOAD_FOLDER)
 # UPLOADS_PATH = './uploads'
-os.makedirs(UPLOADS_PATH)
+# os.makedirs(UPLOADS_PATH)
 
 print ('UPLOADS_PATH', UPLOADS_PATH, os.path.abspath('uploads'), app.root_path, )
 
@@ -96,7 +96,8 @@ def upload_file():
         # filename = secure_filename(file.filename) # revise this because this is important for security
         print ('os.path.join(app.config[], filename)', os.path.join(app.config['UPLOAD_FOLDER']))
 
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #perhaps heroku wants only folder
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.pdf')) #perhaps heroku wants only folder
+        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #perhaps heroku wants only folder
         # file.save(app.config['UPLOAD_FOLDER'])
         print('file saved', file)
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -105,7 +106,7 @@ def upload_file():
         processPdf(savedFilePath)
         print('processpdf')
         # return 'complete'
-        app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'],filename[:-4] + '_Belted.pdf')
+        app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'],filename[:-4] + '_linked.pdf')
         return redirect('/file-downloads/')
 
     return '''
