@@ -89,19 +89,22 @@ def defineUpVars():
 def upload_file():
     if request.method == 'POST':
         file = request.files['file']
-        filename = file.filename
+        # filename = file.filename
+        filename = 'temp.pdf'
         print ('file', file, filename)
 
     
         # filename = secure_filename(file.filename) # revise this because this is important for security
         print ('os.path.join(app.config[], filename)', os.path.join(app.config['UPLOAD_FOLDER']))
 
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.pdf')) #perhaps heroku wants only folder
-        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #perhaps heroku wants only folder
+        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.pdf')) #perhaps heroku wants only folder
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #perhaps heroku wants only folder
         # file.save(app.config['UPLOAD_FOLDER'])
         print('file saved', file)
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         savedFilePath= os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        # app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        # savedFilePath= os.path.join(app.config['UPLOAD_FOLDER'], filename)
         print('UPLOAD_FILE updated')
         processPdf(savedFilePath)
         print('processpdf')
