@@ -146,7 +146,7 @@ def download_file():
 def return_files_tut():
     print ('send_from_directory', app.config["UPLOAD_FOLDER"])
     folderpath = os.path.join(app.config["UPLOAD_FOLDER"])
-    name = app.config['DOWNLOAD_FILE']  + '/temp_linked.pdf'
+    name = app.config['DOWNLOAD_FILE']  
     print('folderpath', folderpath, name)
     return send_file(name, as_attachment=True)
     
