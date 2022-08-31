@@ -335,11 +335,12 @@ def processPdf(savedFilePath):
     detailLinkOkj = {}
 
 
-
+    print('start search text')
     for detailName in SearchText:
         detailLinkOkj[detailName] = {'toPages':[], 'destPage':[]}
         # detailLinkOkj[detailName]['pages'] = []
         
+    print('start page text')
     # print ('no idea', detailLinkOkj)
     for page in doc:
         # print('-----------page', page)
@@ -361,6 +362,7 @@ def processPdf(savedFilePath):
                 detialsFound.append(detailName)
                 detailLinkOkj[detailName]['destPage'].append({pgNum: detailRect})
         
+    print('check if all detiails not found')
     #check if all detiails not found
     for detailName in SearchText:
         
@@ -372,7 +374,7 @@ def processPdf(savedFilePath):
     # print ('no idea', detailLinkOkj)
     # print ( 'page report', pages, detials)
     #----add links to pages
-
+    print('eachDetailObj in detailLinkOkj:')
     for eachDetailObj in detailLinkOkj:
         # print('eachDetailObj', eachDetailObj)
         # print('detailLinkOkj[eachDetailObj][pages]', detailLinkOkj[eachDetailObj]['pages'])
