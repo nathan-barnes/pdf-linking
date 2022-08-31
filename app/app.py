@@ -406,7 +406,8 @@ def processPdf(savedFilePath):
     # doc.ez_save(pdfLinkFolder + pdfName + '_Belted.pdf')
     # doc.ez_save(pdfLink[:-4] + '_Belted.pdf')
     print('pre save')
-    pdfed = urlpdfLink[:-4] + '_Belted.pdf'
+    # pdfed = urlpdfLink[:-4] + '_Belted.pdf'
+    pdfed = urlpdfLink[:-4] + '_linked.pdf'
     pdfedFile = urlpdfLink.split('\\')[-1]#[:-4] + '_Belted.pdf'
     doc.ez_save(pdfed)
     # download_file(pdfLink[:-4] + '_Belted.pdf')
