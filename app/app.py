@@ -102,14 +102,15 @@ def upload_file():
         # file.save(app.config['UPLOAD_FOLDER'])
         print('file saved', file)
         app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        savedFilePath= os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        savedFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         # app.config['UPLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         # savedFilePath= os.path.join(app.config['UPLOAD_FOLDER'], filename)
         print('UPLOAD_FILE updated')
         processPdf(savedFilePath)
         print('processpdf')
         # return 'complete'
-        app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'],filename[:-4] + '_linked.pdf')
+        # app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'],filename[:-4] + '_linked.pdf')
+        app.config['DOWNLOAD_FILE'] = os.path.join(app.config['UPLOAD_FOLDER'], filename[:-4] + '_linked.pdf')
         return redirect('/file-downloads/')
 
     return '''
